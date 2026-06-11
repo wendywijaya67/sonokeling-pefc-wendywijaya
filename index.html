@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Manajemen Sonokeling – PEFC</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #fff8e7;
+    --sky: #8ED3F3;
+    --sky-dark: #5bbde0;
+    --sky-light: #d0ecfa;
+    --brown: #5a3a1a;
+    --brown-mid: #7c5230;
+    --brown-light: #c49a6c;
+    --green-dark: #2d5016;
+    --green-mid: #4a7c26;
+    --green-light: #8bc34a;
+    --text-dark: #2a1f0e;
+    --text-mid: #5a4a35;
+    --text-light: #8a7a65;
+    --border: rgba(90,58,26,0.15);
+    --card-radius: 14px;
+    --transition: 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--sky);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(142,211,243,0.4);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 70px;
+  }
+
+  .header-logo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    flex: 1;
+  }
+
+  .header-title h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--brown);
+    line-height: 1.2;
+  }
+
+  .header-title p {
+    font-size: 12px;
+    color: var(--brown-mid);
+    font-style: italic;
+  }
+
+  .header-badge {
+    background: var(--brown);
+    color: var(--cream);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .header-nav {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-btn {
+    background: rgba(255,248,231,0.3);
+    border: 1px solid rgba(255,248,231,0.5);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--brown);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    font-weight: 500;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--cream);
+    color: var(--brown);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: linear-gradient(135deg, #fff8e7 0%, #d0ecfa 100%);
+    border: 1px solid var(--sky);
+    border-radius: var(--card-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 200px;
+    height: 200px;
+    background: var(--sky-light);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  .hero-text { flex: 1; z-index: 1; }
+
+  .hero-text h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 8px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .hero-tree {
+    width: 160px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    text-align: center;
+  }
+
+  .hero-stat .num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--brown);
+  }
+
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: var(--text-light);
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sky-dark);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── WIDGET GRID ── */
+  .widget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .widget-grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  /* ── WIDGET CARD ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-radius);
+    background: var(--sky-light);
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+
+  .card:hover {
+    transform: scale(1.045);
+    box-shadow: 0 8px 28px rgba(142,211,243,0.35);
+    border-color: var(--sky);
+    z-index: 2;
+  }
+
+  .card:hover::after { opacity: 0.08; }
+
+  .card:active { transform: scale(1.02); }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .icon-sky { background: var(--sky-light); color: var(--sky-dark); }
+  .icon-brown { background: #f5e8d5; color: var(--brown); }
+  .icon-green { background: #e8f5d5; color: var(--green-mid); }
+  .icon-warn { background: #fff3d5; color: #b07800; }
+  .icon-red { background: #fde8e8; color: #b03030; }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 4px;
+  }
+
+  .card-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--brown);
+    line-height: 1.1;
+  }
+
+  .card-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  .card-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .trend-up { background: #e8f5d5; color: var(--green-mid); }
+  .trend-down { background: #fde8e8; color: #b03030; }
+  .trend-ok { background: var(--sky-light); color: var(--sky-dark); }
+
+  /* ── TABLE CARD ── */
+  .table-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .table-card:hover {
+    transform: scale(1.015);
+    box-shadow: 0 8px 28px rgba(142,211,243,0.25);
+    border-color: var(--sky);
+  }
+
+  .table-header {
+    background: var(--sky);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .table-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brown);
+  }
+
+  .table-header i { color: var(--brown-mid); font-size: 18px; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    background: var(--sky-light);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-mid);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dark);
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fffdf5; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status-ok { background: #e8f5d5; color: var(--green-dark); }
+  .status-warn { background: #fff3d5; color: #8a5e00; }
+  .status-bad { background: #fde8e8; color: #7a1f1f; }
+  .status-info { background: var(--sky-light); color: var(--sky-dark); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { margin-bottom: 2rem; }
+
+  .progress-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .progress-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(142,211,243,0.25);
+    border-color: var(--sky);
+  }
+
+  .progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .progress-pct {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brown);
+  }
+
+  .progress-bar-bg {
+    height: 8px;
+    background: var(--sky-light);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--sky);
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .progress-fill-green { background: var(--green-mid); }
+  .progress-fill-brown { background: var(--brown-light); }
+  .progress-fill-warn { background: #e6a800; }
+
+  .progress-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 6px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42,31,14,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border-radius: 18px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    border: 1px solid var(--sky);
+    animation: modalIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modalIn {
+    from { transform: scale(0.88) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    background: var(--sky);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--brown-mid);
+    line-height: 1;
+    padding: 2px;
+    transition: color 0.15s;
+  }
+
+  .modal-close:hover { color: var(--brown); }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sky-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .modal-field {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  .modal-field label {
+    font-size: 11px;
+    color: var(--text-light);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .modal-field span {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .modal-table { width: 100%; border-collapse: collapse; }
+  .modal-table th {
+    background: var(--sky-light);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-align: left;
+  }
+  .modal-table td {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-table tr:last-child td { border-bottom: none; }
+
+  .modal-alert {
+    background: var(--sky-light);
+    border-left: 4px solid var(--sky);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-dark);
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  .modal-alert.warn {
+    background: #fff8e0;
+    border-left-color: #e6a800;
+  }
+
+  .modal-alert.ok {
+    background: #edf7e0;
+    border-left-color: var(--green-mid);
+  }
+
+  /* ── PAGE VIEWS ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── MAP PLACEHOLDER ── */
+  .map-placeholder {
+    background: linear-gradient(145deg, #e8f5d5 0%, #d0ecfa 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow 0.2s;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-placeholder:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 28px rgba(142,211,243,0.3);
+  }
+
+  .map-dot {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid var(--brown);
+    background: rgba(90,58,26,0.2);
+  }
+
+  .map-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 8px; height: 8px;
+    background: var(--brown);
+    border-radius: 50%;
+  }
+
+  .map-label {
+    font-size: 11px;
+    color: var(--brown);
+    font-weight: 600;
+    white-space: nowrap;
+    position: absolute;
+    margin-top: 4px;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <svg class="header-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Simplified tree icon -->
+      <circle cx="22" cy="22" r="21" fill="rgba(255,248,231,0.25)" stroke="rgba(90,58,26,0.2)" stroke-width="1"/>
+      <rect x="19" y="28" width="6" height="10" rx="2" fill="#7c5230"/>
+      <ellipse cx="22" cy="20" rx="11" ry="13" fill="#4a7c26"/>
+      <ellipse cx="22" cy="16" rx="8" ry="9" fill="#2d5016"/>
+      <ellipse cx="22" cy="12" rx="5" ry="6" fill="#4a7c26"/>
+    </svg>
+    <div class="header-title">
+      <h1>SonekoManager – Sistem Manajemen Kayu Sonokeling</h1>
+      <p>Dalbergia latifolia · Sertifikasi PEFC</p>
+    </div>
+    <div class="header-nav">
+      <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="showPage('inventaris')">Inventaris</button>
+      <button class="nav-btn" onclick="showPage('pefc')">PEFC</button>
+      <button class="nav-btn" onclick="showPage('laporan')">Laporan</button>
+    </div>
+    <div class="header-badge">
+      <i class="ti ti-certificate"></i> PEFC/38-00-01
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="page active" id="page-dashboard">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-text">
+        <h2>Pengelolaan Kayu Sonokeling Bersertifikat</h2>
+        <p>Platform manajemen terintegrasi untuk memastikan pengelolaan hutan <em>Dalbergia latifolia</em> memenuhi standar PEFC (Programme for the Endorsement of Forest Certification) — mencakup pelacakan tegakan, rantai pasok, dan kepatuhan lingkungan.</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">1.240</div><div class="lbl">Ha Areal Terkelola</div></div>
+          <div class="hero-stat"><div class="num">87%</div><div class="lbl">Kepatuhan PEFC</div></div>
+          <div class="hero-stat"><div class="num">4.280</div><div class="lbl">Pohon Terdaftar</div></div>
+          <div class="hero-stat"><div class="num">2026</div><div class="lbl">Tahun Sertifikasi</div></div>
+        </div>
+      </div>
+      <!-- Sonokeling Tree SVG -->
+      <svg class="hero-tree" viewBox="0 0 160 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <ellipse cx="80" cy="228" rx="52" ry="8" fill="#c49a6c" opacity="0.3"/>
+        <!-- Trunk -->
+        <path d="M70 230 Q68 200 65 175 Q63 155 72 140 L75 100 Q78 110 80 105 Q82 110 85 100 L88 140 Q97 155 95 175 Q92 200 90 230 Z" fill="#7c5230"/>
+        <path d="M74 230 Q73 200 71 175 Q70 160 75 145" stroke="#5a3a1a" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        <!-- Main canopy layers -->
+        <ellipse cx="80" cy="135" rx="48" ry="38" fill="#4a7c26"/>
+        <ellipse cx="55" cy="120" rx="28" ry="22" fill="#2d5016"/>
+        <ellipse cx="105" cy="118" rx="25" ry="20" fill="#2d5016"/>
+        <ellipse cx="80" cy="95" rx="38" ry="32" fill="#4a7c26"/>
+        <ellipse cx="60" cy="85" rx="22" ry="18" fill="#3a6820"/>
+        <ellipse cx="100" cy="82" rx="20" ry="16" fill="#3a6820"/>
+        <ellipse cx="80" cy="62" rx="28" ry="24" fill="#4a7c26"/>
+        <ellipse cx="80" cy="46" rx="20" ry="18" fill="#2d5016"/>
+        <ellipse cx="80" cy="35" rx="12" ry="12" fill="#4a7c26"/>
+        <!-- Flowers / purple tinge typical of D. latifolia -->
+        <circle cx="68" cy="52" r="3" fill="#9b59b6" opacity="0.8"/>
+        <circle cx="88" cy="48" r="2.5" fill="#c39bd3" opacity="0.7"/>
+        <circle cx="58" cy="75" r="2" fill="#9b59b6" opacity="0.6"/>
+        <circle cx="100" cy="70" r="2.5" fill="#c39bd3" opacity="0.7"/>
+        <circle cx="74" cy="105" r="2" fill="#9b59b6" opacity="0.5"/>
+        <circle cx="92" cy="100" r="2" fill="#c39bd3" opacity="0.6"/>
+        <!-- Wood grain detail on trunk -->
+        <path d="M76 180 Q80 175 84 180" stroke="#5a3a1a" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M75 195 Q80 190 85 195" stroke="#5a3a1a" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M73 210 Q80 205 87 210" stroke="#5a3a1a" stroke-width="1" fill="none" opacity="0.5"/>
+        <!-- Label -->
+        <text x="80" y="246" text-anchor="middle" font-size="9" fill="#7c5230" font-style="italic" font-family="serif">Dalbergia latifolia</text>
+      </svg>
+    </div>
+
+    <!-- KPI WIDGETS -->
+    <div class="section-label"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Ringkasan KPI</div>
+    <div class="widget-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+
+      <div class="card" onclick="openModal('modal-tegakan')">
+        <div class="card-icon icon-green"><i class="ti ti-trees" aria-hidden="true"></i></div>
+        <div class="card-title">Total Tegakan</div>
+        <div class="card-value">4.280</div>
+        <div class="card-sub">Pohon Sonokeling</div>
+        <div class="card-trend trend-up"><i class="ti ti-trending-up"></i> +3,2% tahun ini</div>
+      </div>
+
+      <div class="card" onclick="openModal('modal-volume')">
+        <div class="card-icon icon-brown"><i class="ti ti-box" aria-hidden="true"></i></div>
+        <div class="card-title">Volume Kayu</div>
+        <div class="card-value">1.847 m³</div>
+        <div class="card-sub">Siap panen terverifikasi</div>
+        <div class="card-trend trend-ok"><i class="ti ti-minus"></i> Stabil</div>
+      </div>
+
+      <div class="card" onclick="openModal('modal-areal')">
+        <div class="card-icon icon-sky"><i class="ti ti-map" aria-hidden="true"></i></div>
+        <div class="card-title">Luas Areal</div>
+        <div class="card-value">1.240 Ha</div>
+        <div class="card-sub">Tersertifikasi PEFC</div>
+        <div class="card-trend trend-up"><i class="ti ti-trending-up"></i> +45 Ha baru</div>
+      </div>
+
+      <div class="card" onclick="openModal('modal-karbon')">
+        <div class="card-icon icon-green"><i class="ti ti-leaf" aria-hidden="true"></i></div>
+        <div class="card-title">Stok Karbon</div>
+        <div class="card-value">6.840 tC</div>
+        <div class="card-sub">Estimasi karbon tersimpan</div>
+        <div class="card-trend trend-up"><i class="ti ti-trending-up"></i> +5,1%</div>
+      </div>
+
+      <div class="card" onclick="openModal('modal-pelanggaran')">
+        <div class="card-icon icon-warn"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+        <div class="card-title">Temuan Audit</div>
+        <div class="card-value">3</div>
+        <div class="card-sub">Minor non-conformance</div>
+        <div class="card-trend trend-down"><i class="ti ti-alert-circle"></i> Perlu tindak lanjut</div>
+      </div>
+
+      <div class="card" onclick="openModal('modal-rantaipasok')">
+        <div class="card-icon icon-sky"><i class="ti ti-truck" aria-hidden="true"></i></div>
+        <div class="card-title">Rantai Pasok</div>
+        <div class="card-value">12</div>
+        <div class="card-sub">Mitra terverifikasi CoC</div>
+        <div class="card-trend trend-up"><i class="ti ti-trending-up"></i> 2 mitra baru</div>
+      </div>
+
+    </div>
+
+    <!-- PEFC PROGRESS -->
+    <div class="section-label"><i class="ti ti-certificate" aria-hidden="true"></i> Progres Sertifikasi PEFC</div>
+    <div class="progress-wrap">
+
+      <div class="progress-item" onclick="openModal('modal-pefc-1')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-subtask" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 1: Komitmen Kebijakan</div>
+          <div class="progress-pct">100%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill progress-fill-green" style="width:100%"></div></div>
+        <div class="progress-sub">Kebijakan pengelolaan hutan berkelanjutan telah disahkan dan dikomunikasikan</div>
+      </div>
+
+      <div class="progress-item" onclick="openModal('modal-pefc-2')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-shield-check" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 2: Kepatuhan Hukum</div>
+          <div class="progress-pct">95%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill progress-fill-green" style="width:95%"></div></div>
+        <div class="progress-sub">Izin dan dokumen legal lengkap; 2 dokumen dalam proses pembaruan</div>
+      </div>
+
+      <div class="progress-item" onclick="openModal('modal-pefc-3')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-leaf" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 3: Keanekaragaman Hayati</div>
+          <div class="progress-pct">78%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:78%; background:var(--sky);"></div></div>
+        <div class="progress-sub">Survei vegetasi dan satwa liar: 78 dari 100 indikator terpenuhi</div>
+      </div>
+
+      <div class="progress-item" onclick="openModal('modal-pefc-4')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-users" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 4: Dampak Sosial & Masyarakat</div>
+          <div class="progress-pct">88%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:88%; background:var(--brown-light);"></div></div>
+        <div class="progress-sub">Konsultasi masyarakat lokal dan pemetaan hak adat berjalan</div>
+      </div>
+
+      <div class="progress-item" onclick="openModal('modal-pefc-5')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-chart-line" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 5: Pemantauan & Evaluasi</div>
+          <div class="progress-pct">65%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:65%; background:var(--sky);"></div></div>
+        <div class="progress-sub">Sistem pemantauan sedang diimplementasikan; target selesai Q3 2026</div>
+      </div>
+
+      <div class="progress-item" onclick="openModal('modal-pefc-6')">
+        <div class="progress-header">
+          <div class="progress-label"><i class="ti ti-arrows-exchange" style="color:var(--sky-dark)" aria-hidden="true"></i> Kriteria 6: Rantai Pasok (CoC)</div>
+          <div class="progress-pct">82%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:82%; background:var(--brown-light);"></div></div>
+        <div class="progress-sub">12 dari 15 mitra telah memiliki sertifikat CoC aktif</div>
+      </div>
+
+    </div>
+
+    <!-- PETA LOKASI -->
+    <div class="section-label"><i class="ti ti-map-pin" aria-hidden="true"></i> Peta Sebaran Petak</div>
+    <div class="map-placeholder" onclick="openModal('modal-peta')">
+      <!-- Simplified schematic map of Central Kalimantan area -->
+      <svg width="100%" height="100%" viewBox="0 0 700 240" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;">
+        <!-- Background gradient -->
+        <defs>
+          <linearGradient id="mapbg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#d0ecfa" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#e8f5d5" stop-opacity="0.6"/>
+          </linearGradient>
+        </defs>
+        <rect width="700" height="240" fill="url(#mapbg)" rx="13"/>
+        <!-- Fake topographic lines -->
+        <path d="M50 180 Q150 160 250 170 Q350 180 450 165 Q550 150 650 160" stroke="rgba(74,124,38,0.2)" stroke-width="2" fill="none"/>
+        <path d="M30 150 Q130 130 230 140 Q330 150 430 130 Q530 115 680 128" stroke="rgba(74,124,38,0.15)" stroke-width="2" fill="none"/>
+        <path d="M60 120 Q160 100 260 110 Q360 120 460 100 Q560 82 690 95" stroke="rgba(74,124,38,0.12)" stroke-width="2" fill="none"/>
+        <!-- River-like shape -->
+        <path d="M0 200 Q80 190 150 195 Q200 198 240 192 Q300 185 380 188 Q440 190 500 182 Q570 172 700 175" stroke="rgba(142,211,243,0.7)" stroke-width="4" fill="none"/>
+        <!-- Plot markers -->
+        <g>
+          <!-- Petak A -->
+          <ellipse cx="180" cy="135" rx="55" ry="35" fill="rgba(74,124,38,0.25)" stroke="#4a7c26" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="180" cy="135" r="7" fill="#4a7c26"/>
+          <text x="180" y="110" text-anchor="middle" font-size="12" fill="#2d5016" font-weight="bold" font-family="sans-serif">Petak A</text>
+          <text x="180" y="124" text-anchor="middle" font-size="10" fill="#4a7c26" font-family="sans-serif">380 Ha</text>
+          <!-- Petak B -->
+          <ellipse cx="340" cy="100" rx="65" ry="38" fill="rgba(142,211,243,0.3)" stroke="#5bbde0" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="340" cy="100" r="7" fill="#5bbde0"/>
+          <text x="340" y="74" text-anchor="middle" font-size="12" fill="#1a6a8f" font-weight="bold" font-family="sans-serif">Petak B</text>
+          <text x="340" y="88" text-anchor="middle" font-size="10" fill="#5bbde0" font-family="sans-serif">420 Ha</text>
+          <!-- Petak C -->
+          <ellipse cx="510" cy="145" rx="58" ry="36" fill="rgba(90,58,26,0.15)" stroke="#7c5230" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="510" cy="145" r="7" fill="#7c5230"/>
+          <text x="510" y="120" text-anchor="middle" font-size="12" fill="#5a3a1a" font-weight="bold" font-family="sans-serif">Petak C</text>
+          <text x="510" y="134" text-anchor="middle" font-size="10" fill="#7c5230" font-family="sans-serif">440 Ha</text>
+          <!-- Compass -->
+          <g transform="translate(640, 30)">
+            <circle r="22" fill="rgba(255,248,231,0.7)" stroke="rgba(90,58,26,0.2)" stroke-width="1"/>
+            <text y="-8" text-anchor="middle" font-size="11" fill="#5a3a1a" font-weight="bold" font-family="sans-serif">N</text>
+            <line x1="0" y1="-14" x2="0" y2="14" stroke="#5a3a1a" stroke-width="1.5"/>
+            <line x1="-14" y1="0" x2="14" y2="0" stroke="#5a3a1a" stroke-width="1.5" opacity="0.4"/>
+            <polygon points="0,-14 -4,-2 0,2 4,-2" fill="#5a3a1a"/>
+          </g>
+          <!-- Scale bar -->
+          <rect x="30" y="210" width="100" height="4" fill="rgba(90,58,26,0.5)" rx="2"/>
+          <text x="80" y="225" text-anchor="middle" font-size="10" fill="#7c5230" font-family="sans-serif">5 km</text>
+        </g>
+      </svg>
+      <span style="position:relative;font-size:13px;font-weight:600;color:var(--brown-mid);">
+        <i class="ti ti-zoom-in" style="font-size:16px;vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>Klik untuk detail petak
+      </span>
+    </div>
+
+    <!-- RECENT ACTIVITY TABLE -->
+    <div class="section-label"><i class="ti ti-history" aria-hidden="true"></i> Aktivitas Terbaru</div>
+    <div class="table-card" onclick="openModal('modal-aktivitas')">
+      <div class="table-header">
+        <i class="ti ti-list-details" aria-hidden="true"></i>
+        <h3>Log Kegiatan Pengelolaan</h3>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Kegiatan</th>
+            <th>Petak</th>
+            <th>Petugas</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10 Jun 2026</td>
+            <td>Inventarisasi tegakan Q2</td>
+            <td>Petak B</td>
+            <td>Hendra S.</td>
+            <td><span class="status-badge status-ok"><i class="ti ti-check" style="font-size:11px"></i> Selesai</span></td>
+          </tr>
+          <tr>
+            <td>07 Jun 2026</td>
+            <td>Pemanenan terseleksi</td>
+            <td>Petak A</td>
+            <td>Tim Produksi</td>
+            <td><span class="status-badge status-ok"><i class="ti ti-check" style="font-size:11px"></i> Selesai</span></td>
+          </tr>
+          <tr>
+            <td>04 Jun 2026</td>
+            <td>Audit internal PEFC</td>
+            <td>Semua Petak</td>
+            <td>Auditor Ext.</td>
+            <td><span class="status-badge status-warn"><i class="ti ti-alert-circle" style="font-size:11px"></i> 3 Temuan</span></td>
+          </tr>
+          <tr>
+            <td>02 Jun 2026</td>
+            <td>Survei keanekaragaman hayati</td>
+            <td>Petak C</td>
+            <td>Dr. Sari W.</td>
+            <td><span class="status-badge status-ok"><i class="ti ti-check" style="font-size:11px"></i> Selesai</span></td>
+          </tr>
+          <tr>
+            <td>28 Mei 2026</td>
+            <td>Pemeliharaan jalan sarad</td>
+            <td>Petak A & B</td>
+            <td>Tim Infrastruktur</td>
+            <td><span class="status-badge status-info"><i class="ti ti-clock" style="font-size:11px"></i> Berlangsung</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /dashboard -->
+
+  <!-- ═══ INVENTARIS ═══ -->
+  <div class="page" id="page-inventaris">
+    <div class="section-label"><i class="ti ti-trees" aria-hidden="true"></i> Inventaris Tegakan Sonokeling</div>
+    <div class="widget-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:1.5rem;">
+      <div class="card" onclick="openModal('modal-inv-kelas')">
+        <div class="card-icon icon-green"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+        <div class="card-title">Kelas Diameter</div>
+        <div class="card-value">5 Kelas</div>
+        <div class="card-sub">10–60 cm diameter</div>
+      </div>
+      <div class="card" onclick="openModal('modal-inv-tinggi')">
+        <div class="card-icon icon-brown"><i class="ti ti-ruler-2" aria-hidden="true"></i></div>
+        <div class="card-title">Tinggi Rata-rata</div>
+        <div class="card-value">18,4 m</div>
+        <div class="card-sub">Tegakan dewasa</div>
+      </div>
+      <div class="card" onclick="openModal('modal-inv-riap')">
+        <div class="card-icon icon-sky"><i class="ti ti-trending-up" aria-hidden="true"></i></div>
+        <div class="card-title">Riap Tahunan</div>
+        <div class="card-value">2,8 m³/Ha</div>
+        <div class="card-sub">MAI terukur</div>
+      </div>
+      <div class="card" onclick="openModal('modal-inv-kerapatan')">
+        <div class="card-icon icon-warn"><i class="ti ti-grid-dots" aria-hidden="true"></i></div>
+        <div class="card-title">Kerapatan</div>
+        <div class="card-value">3,4 N/Ha</div>
+        <div class="card-sub">Pohon per hektar</div>
+      </div>
+    </div>
+
+    <div class="section-label"><i class="ti ti-table" aria-hidden="true"></i> Data Tegakan per Petak</div>
+    <div class="table-card" onclick="openModal('modal-tegakan-detail')">
+      <div class="table-header">
+        <i class="ti ti-trees" aria-hidden="true"></i>
+        <h3>Rekap Inventarisasi Tegakan – Tahun 2026</h3>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>No Petak</th>
+            <th>Luas (Ha)</th>
+            <th>Jumlah Pohon</th>
+            <th>Vol. Kayu (m³)</th>
+            <th>Riap (m³/Ha)</th>
+            <th>Kelas Hutan</th>
+            <th>Siap Panen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A-01</strong></td><td>380</td><td>1.295</td><td>680</td><td>2,9</td>
+            <td><span class="status-badge status-ok">Produksi</span></td>
+            <td><span class="status-badge status-ok">✓ Ya</span></td>
+          </tr>
+          <tr>
+            <td><strong>A-02</strong></td><td>420</td><td>1.428</td><td>742</td><td>2,7</td>
+            <td><span class="status-badge status-ok">Produksi</span></td>
+            <td><span class="status-badge status-warn">Parsial</span></td>
+          </tr>
+          <tr>
+            <td><strong>B-01</strong></td><td>250</td><td>850</td><td>280</td><td>2,2</td>
+            <td><span class="status-badge status-info">Lindung</span></td>
+            <td><span class="status-badge status-bad">Tidak</span></td>
+          </tr>
+          <tr>
+            <td><strong>C-01</strong></td><td>190</td><td>707</td><td>145</td><td>1,8</td>
+            <td><span class="status-badge status-info">Rehabilitasi</span></td>
+            <td><span class="status-badge status-bad">Tidak</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ PEFC ═══ -->
+  <div class="page" id="page-pefc">
+    <div class="section-label"><i class="ti ti-certificate" aria-hidden="true"></i> Persyaratan Sertifikasi PEFC</div>
+    <div class="widget-grid widget-grid-3">
+      <div class="card" onclick="openModal('modal-doc-pefc')">
+        <div class="card-icon icon-sky"><i class="ti ti-file-certificate" aria-hidden="true"></i></div>
+        <div class="card-title">Dokumentasi Wajib</div>
+        <div class="card-value">18/22</div>
+        <div class="card-sub">Dokumen telah disiapkan</div>
+        <div class="card-trend trend-warn" style="background:#fff3d5;color:#8a5e00;"><i class="ti ti-alert-circle"></i> 4 dokumen pending</div>
+      </div>
+      <div class="card" onclick="openModal('modal-audit-jadwal')">
+        <div class="card-icon icon-green"><i class="ti ti-calendar-check" aria-hidden="true"></i></div>
+        <div class="card-title">Audit Berikutnya</div>
+        <div class="card-value">15 Agt</div>
+        <div class="card-sub">Surveillance audit 2026</div>
+        <div class="card-trend trend-ok"><i class="ti ti-clock"></i> 65 hari lagi</div>
+      </div>
+      <div class="card" onclick="openModal('modal-coc')">
+        <div class="card-icon icon-brown"><i class="ti ti-link" aria-hidden="true"></i></div>
+        <div class="card-title">Sertifikat CoC</div>
+        <div class="card-value">PEFC/38-31-01</div>
+        <div class="card-sub">Berlaku s/d Des 2027</div>
+        <div class="card-trend trend-up"><i class="ti ti-check"></i> Aktif</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:0.5rem"><i class="ti ti-checklist" aria-hidden="true"></i> Checklist Persyaratan PEFC ST 1003</div>
+    <div class="table-card" onclick="openModal('modal-checklist')">
+      <div class="table-header">
+        <i class="ti ti-list-check" aria-hidden="true"></i>
+        <h3>Matriks Kepatuhan PEFC ST 1003:2018</h3>
+      </div>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Persyaratan</th><th>Indikator</th><th>Status</th><th>Catatan</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1.1</td><td>Kebijakan Pengelolaan Hutan</td><td>Dokumen kebijakan</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>2.1</td><td>Status Hak Guna Usaha</td><td>Izin usaha pemanfaatan</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>3.1</td><td>Perlindungan HCV</td><td>Peta kawasan bernilai tinggi</td>
+            <td><span class="status-badge status-warn">Dalam Proses</span></td><td>Update peta Q3</td>
+          </tr>
+          <tr>
+            <td>3.2</td><td>Pemantauan Satwa Liar</td><td>Survey tahunan</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>4.1</td><td>Konsultasi Masyarakat</td><td>Berita acara musyawarah</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>4.2</td><td>Hak Masyarakat Adat</td><td>Pemetaan wilayah adat</td>
+            <td><span class="status-badge status-warn">Dalam Proses</span></td><td>FPIC sedang berjalan</td>
+          </tr>
+          <tr>
+            <td>5.1</td><td>Rencana Pengelolaan Hutan</td><td>RPKH 10 tahun</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>6.1</td><td>Sistem Pelacakan Kayu</td><td>Dokumen CoC</td>
+            <td><span class="status-badge status-ok">Terpenuhi</span></td><td>—</td>
+          </tr>
+          <tr>
+            <td>6.2</td><td>Prosedur Verifikasi Pasokan</td><td>SOP verifikasi pemasok</td>
+            <td><span class="status-badge status-bad">Belum Terpenuhi</span></td><td>SOP revisi diperlukan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ LAPORAN ═══ -->
+  <div class="page" id="page-laporan">
+    <div class="section-label"><i class="ti ti-report" aria-hidden="true"></i> Laporan & Dokumen</div>
+    <div class="widget-grid widget-grid-3">
+      <div class="card" onclick="openModal('modal-laporan-tahunan')">
+        <div class="card-icon icon-sky"><i class="ti ti-file-text" aria-hidden="true"></i></div>
+        <div class="card-title">Laporan Tahunan 2025</div>
+        <div class="card-value">Tersedia</div>
+        <div class="card-sub">PDF · 4,2 MB · Disahkan</div>
+      </div>
+      <div class="card" onclick="openModal('modal-laporan-audit')">
+        <div class="card-icon icon-brown"><i class="ti ti-clipboard-check" aria-hidden="true"></i></div>
+        <div class="card-title">Laporan Audit Internal</div>
+        <div class="card-value">Jun 2026</div>
+        <div class="card-sub">3 temuan minor</div>
+      </div>
+      <div class="card" onclick="openModal('modal-laporan-karbon')">
+        <div class="card-icon icon-green"><i class="ti ti-plant" aria-hidden="true"></i></div>
+        <div class="card-title">Laporan Stok Karbon</div>
+        <div class="card-value">6.840 tC</div>
+        <div class="card-sub">Estimasi Maret 2026</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:0.5rem"><i class="ti ti-timeline" aria-hidden="true"></i> Jadwal Kegiatan Mendatang</div>
+    <div class="table-card" onclick="openModal('modal-jadwal')">
+      <div class="table-header">
+        <i class="ti ti-calendar-event" aria-hidden="true"></i>
+        <h3>Rencana Kegiatan Semester II 2026</h3>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Periode</th><th>Kegiatan</th><th>Penanggung Jawab</th><th>Anggaran</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jul 2026</td><td>Inventarisasi tegakan Q3</td><td>Tim Inventaris</td><td>Rp 24 jt</td>
+            <td><span class="status-badge status-info">Direncanakan</span></td>
+          </tr>
+          <tr>
+            <td>Agt 2026</td><td>Surveillance audit PEFC</td><td>Lembaga Sertifikasi</td><td>Rp 60 jt</td>
+            <td><span class="status-badge status-info">Direncanakan</span></td>
+          </tr>
+          <tr>
+            <td>Sep 2026</td><td>Penanaman pengayaan</td><td>Tim Silvikultur</td><td>Rp 45 jt</td>
+            <td><span class="status-badge status-info">Direncanakan</span></td>
+          </tr>
+          <tr>
+            <td>Okt 2026</td><td>Pemanenan terencana Petak A</td><td>Tim Produksi</td><td>Rp 180 jt</td>
+            <td><span class="status-badge status-warn">Perlu Persetujuan</span></td>
+          </tr>
+          <tr>
+            <td>Des 2026</td><td>Laporan akhir tahun PEFC</td><td>Manajer Sertifikasi</td><td>Rp 15 jt</td>
+            <td><span class="status-badge status-info">Direncanakan</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<div class="modal-overlay" id="modal-tegakan">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-trees"></i> Detail Total Tegakan Sonokeling</h3>
+      <button class="modal-close" onclick="closeModal('modal-tegakan')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-chart-bar"></i> Distribusi per Petak</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Petak A (380 Ha)</label><span>1.295 pohon</span></div>
+          <div class="modal-field"><label>Petak B (420 Ha)</label><span>1.428 pohon</span></div>
+          <div class="modal-field"><label>Petak C (440 Ha)</label><span>1.557 pohon</span></div>
+          <div class="modal-field"><label>Total Areal</label><span>1.240 Ha</span></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-info-circle"></i> Kelas Diameter</div>
+        <table class="modal-table">
+          <tr><th>Kelas</th><th>Diameter (cm)</th><th>Jumlah</th><th>% Total</th></tr>
+          <tr><td>Semai</td><td>&lt;10</td><td>620</td><td>14,5%</td></tr>
+          <tr><td>Sapihan</td><td>10–20</td><td>980</td><td>22,9%</td></tr>
+          <tr><td>Tiang</td><td>20–35</td><td>1.340</td><td>31,3%</td></tr>
+          <tr><td>Pohon kecil</td><td>35–50</td><td>890</td><td>20,8%</td></tr>
+          <tr><td>Pohon besar</td><td>&gt;50</td><td>450</td><td>10,5%</td></tr>
+        </table>
+      </div>
+      <div class="modal-alert ok"><i class="ti ti-check-circle" style="font-size:15px;vertical-align:-2px;margin-right:6px"></i>Struktur tegakan menunjukkan komposisi yang baik dengan regenerasi alami yang memadai — sesuai kriteria PEFC untuk kelestarian tegakan.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-volume">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-box"></i> Detail Volume Kayu Tersertifikasi</h3>
+      <button class="modal-close" onclick="closeModal('modal-volume')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-ruler"></i> Volume per Kelas</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Kayu bulat besar (&gt;30 cm)</label><span>1.240 m³</span></div>
+          <div class="modal-field"><label>Kayu bulat kecil</label><span>420 m³</span></div>
+          <div class="modal-field"><label>Kayu cabang</label><span>187 m³</span></div>
+          <div class="modal-field"><label>Total terverifikasi</label><span>1.847 m³</span></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-info-circle"></i> Informasi Kayu Sonokeling</div>
+        <div class="modal-alert"><strong>Dalbergia latifolia</strong> — Kayu sonokeling termasuk kayu perdagangan bernilai tinggi. Berat jenis 0,75–0,95 g/cm³, kelas kuat I-II, kelas awet I-II. Dikenal dengan pola serat indah dan warna ungu kehitaman khas. Regulasi: tercantum dalam CITES Appendix II, memerlukan dokumen SVLK dan sertifikat PEFC untuk ekspor.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-areal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-map"></i> Detail Areal Kelola</h3>
+      <button class="modal-close" onclick="closeModal('modal-areal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-map-pins"></i> Pembagian Areal</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Areal produksi</label><span>820 Ha (66%)</span></div>
+          <div class="modal-field"><label>Areal lindung</label><span>250 Ha (20%)</span></div>
+          <div class="modal-field"><label>Areal rehabilitasi</label><span>120 Ha (10%)</span></div>
+          <div class="modal-field"><label>Infrastruktur</label><span>50 Ha (4%)</span></div>
+        </div>
+      </div>
+      <div class="modal-alert ok">Proporsi areal lindung 20% memenuhi persyaratan minimum PEFC sebesar 15% dari total areal.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-karbon">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-leaf"></i> Estimasi Stok Karbon</h3>
+      <button class="modal-close" onclick="closeModal('modal-karbon')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-chart-area"></i> Komponen Karbon</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Biomassa atas tanah</label><span>4.120 tC</span></div>
+          <div class="modal-field"><label>Biomassa bawah tanah</label><span>1.240 tC</span></div>
+          <div class="modal-field"><label>Serasah & nekromassa</span><span>840 tC</span></div>
+          <div class="modal-field"><label>Karbon tanah (0–30cm)</label><span>640 tC</span></div>
+        </div>
+      </div>
+      <div class="modal-alert">Metode estimasi: allometric equation Williams et al. (2019) untuk Dalbergia spp. Faktor ekspansi biomassa (BEF) = 1,32. Rasio akar-tajuk = 0,30.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pelanggaran">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-alert-triangle"></i> Temuan Audit Internal</h3>
+      <button class="modal-close" onclick="closeModal('modal-pelanggaran')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-file-alert"></i> Daftar Temuan (3 Minor Non-conformance)</div>
+        <table class="modal-table">
+          <tr><th>#</th><th>Temuan</th><th>Klausul</th><th>Batas</th></tr>
+          <tr><td>MNC-01</td><td>SOP verifikasi pemasok belum direvisi sesuai PEFC ST 2002:2020</td><td>6.2</td><td>31 Jul 2026</td></tr>
+          <tr><td>MNC-02</td><td>Peta kawasan bernilai konservasi tinggi (HCV) belum diperbarui</td><td>3.1</td><td>15 Agt 2026</td></tr>
+          <tr><td>MNC-03</td><td>Dokumen FPIC untuk 2 desa belum ditandatangani</td><td>4.2</td><td>30 Jun 2026</td></tr>
+        </table>
+      </div>
+      <div class="modal-alert warn"><i class="ti ti-alert-circle" style="font-size:15px;vertical-align:-2px;margin-right:6px"></i>Semua temuan minor harus diselesaikan sebelum surveillance audit pada 15 Agustus 2026 untuk mempertahankan sertifikasi PEFC.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-rantaipasok">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-truck"></i> Rantai Pasok (Chain of Custody)</h3>
+      <button class="modal-close" onclick="closeModal('modal-rantaipasok')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-building-store"></i> Mitra Terverifikasi CoC</div>
+        <table class="modal-table">
+          <tr><th>Mitra</th><th>Jenis</th><th>No. CoC</th><th>Status</th></tr>
+          <tr><td>PT Mitra Kayu Jaya</td><td>Pengolahan</td><td>PEFC/38-31-02</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>CV Timber Nusantara</td><td>Perdagangan</td><td>PEFC/38-31-05</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>PT Indo Furniture</td><td>Manufaktur</td><td>PEFC/38-31-08</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>CV Kayu Lestari</td><td>Pengolahan</td><td>—</td><td><span class="status-badge status-warn">Proses Sertifikasi</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-peta">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-map-2"></i> Detail Sebaran Petak Kelola</h3>
+      <button class="modal-close" onclick="closeModal('modal-peta')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-info-circle"></i> Koordinat dan Luas Petak</div>
+        <table class="modal-table">
+          <tr><th>Petak</th><th>Koordinat Pusat</th><th>Luas (Ha)</th><th>Jenis Hutan</th><th>Status</th></tr>
+          <tr><td>A-01</td><td>1°54'S, 113°22'E</td><td>380</td><td>Hutan produksi</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>A-02</td><td>1°58'S, 113°28'E</td><td>420</td><td>Hutan produksi</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>B-01</td><td>2°05'S, 113°18'E</td><td>250</td><td>Hutan lindung</td><td><span class="status-badge status-info">Dilindungi</span></td></tr>
+          <tr><td>C-01</td><td>1°48'S, 113°35'E</td><td>190</td><td>Hutan rehabilitasi</td><td><span class="status-badge status-warn">Rehabilitasi</span></td></tr>
+        </table>
+      </div>
+      <div class="modal-alert">Seluruh petak berada di wilayah administrasi Kabupaten Katingan, Kalimantan Tengah. Koordinat tersertifikasi dan terdaftar pada Kementerian LHK.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-aktivitas">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-history"></i> Log Aktivitas Lengkap</h3>
+      <button class="modal-close" onclick="closeModal('modal-aktivitas')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-list"></i> Riwayat Kegiatan Semester I 2026</div>
+        <table class="modal-table">
+          <tr><th>Tanggal</th><th>Kegiatan</th><th>Petak</th><th>Output</th><th>Status</th></tr>
+          <tr><td>10 Jun</td><td>Inventarisasi tegakan Q2</td><td>Petak B</td><td>Laporan PDF</td><td><span class="status-badge status-ok">Selesai</span></td></tr>
+          <tr><td>07 Jun</td><td>Pemanenan terseleksi</td><td>Petak A</td><td>48 m³ kayu</td><td><span class="status-badge status-ok">Selesai</span></td></tr>
+          <tr><td>04 Jun</td><td>Audit internal PEFC</td><td>Semua</td><td>Laporan audit</td><td><span class="status-badge status-warn">3 Temuan</span></td></tr>
+          <tr><td>02 Jun</td><td>Survei keanekaragaman hayati</td><td>Petak C</td><td>Data flora-fauna</td><td><span class="status-badge status-ok">Selesai</span></td></tr>
+          <tr><td>28 Mei</td><td>Pemeliharaan jalan sarad</td><td>A & B</td><td>—</td><td><span class="status-badge status-info">Berlangsung</span></td></tr>
+          <tr><td>15 Mei</td><td>Pelatihan K3 pekerja</td><td>Base camp</td><td>Sertifikat</td><td><span class="status-badge status-ok">Selesai</span></td></tr>
+          <tr><td>03 Mei</td><td>Konsultasi masyarakat Desa Tumbang</td><td>—</td><td>Berita acara</td><td><span class="status-badge status-ok">Selesai</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PEFC Criteria Modals -->
+<div class="modal-overlay" id="modal-pefc-1">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-subtask"></i> Kriteria 1: Komitmen Kebijakan (100%)</h3>
+      <button class="modal-close" onclick="closeModal('modal-pefc-1')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-checklist"></i> Indikator Terpenuhi</div>
+        <table class="modal-table">
+          <tr><th>Indikator</th><th>Dokumen</th><th>Status</th></tr>
+          <tr><td>Kebijakan pengelolaan hutan berkelanjutan</td><td>SK Direktur No.001/2024</td><td><span class="status-badge status-ok">✓</span></td></tr>
+          <tr><td>Komitmen kepatuhan hukum</td><td>Pernyataan tertulis</td><td><span class="status-badge status-ok">✓</span></td></tr>
+          <tr><td>Komunikasi kebijakan ke seluruh staf</td><td>Notulen sosialisasi</td><td><span class="status-badge status-ok">✓</span></td></tr>
+          <tr><td>Tinjauan kebijakan tahunan</td><td>Risalah rapat direksi</td><td><span class="status-badge status-ok">✓</span></td></tr>
+        </table>
+      </div>
+      <div class="modal-alert ok">Semua indikator Kriteria 1 telah terpenuhi. Tidak ada tindakan korektif yang diperlukan.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pefc-3">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-leaf"></i> Kriteria 3: Keanekaragaman Hayati (78%)</h3>
+      <button class="modal-close" onclick="closeModal('modal-pefc-3')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-zoom-check"></i> Status Indikator (78/100)</div>
+        <table class="modal-table">
+          <tr><th>Sub-kriteria</th><th>Indikator</th><th>Terpenuhi</th><th>Total</th></tr>
+          <tr><td>Perlindungan HCV</td><td>Identifikasi dan peta HCV</td><td>12</td><td>15</td></tr>
+          <tr><td>Satwa dilindungi</td><td>Daftar spesies & monitoring</td><td>18</td><td>20</td></tr>
+          <tr><td>Vegetasi bawah</td><td>Plot pengamatan vegetasi</td><td>24</td><td>28</td></tr>
+          <tr><td>Riparian buffer</td><td>Jalur sempadan sungai</td><td>14</td><td>20</td></tr>
+          <tr><td>Pohon perlindungan</td><td>Pohon sarang & hollow trees</td><td>10</td><td>17</td></tr>
+        </table>
+      </div>
+      <div class="modal-alert warn">Peta HCV perlu diperbarui untuk 3 zona yang belum dipetakan. Target selesai Q3 2026.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-doc-pefc">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-file-certificate"></i> Status Dokumentasi PEFC</h3>
+      <button class="modal-close" onclick="closeModal('modal-doc-pefc')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-files"></i> Daftar Dokumen Wajib</div>
+        <table class="modal-table">
+          <tr><th>Dokumen</th><th>Versi</th><th>Status</th></tr>
+          <tr><td>Rencana Pengelolaan Hutan (RPKH)</td><td>2024–2034</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>Peta areal kerja berskala 1:50.000</td><td>Rev. 2025</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>Kebijakan lingkungan & sosial</td><td>Ver. 3.1</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>Prosedur pemanenan ramah lingkungan (RIL)</td><td>Ver. 2.0</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>SOP rantai pasok (CoC)</td><td>—</td><td><span class="status-badge status-warn">Revisi diperlukan</span></td></tr>
+          <tr><td>Laporan survei keanekaragaman hayati</td><td>2026</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>Dokumen FPIC masyarakat adat</td><td>—</td><td><span class="status-badge status-warn">Dalam proses</span></td></tr>
+          <tr><td>Peta kawasan HCV terbaru</td><td>—</td><td><span class="status-badge status-warn">Dalam proses</span></td></tr>
+          <tr><td>Laporan pemantauan tahunan</td><td>2025</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-laporan-tahunan">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="ti ti-file-text"></i> Laporan Tahunan Pengelolaan 2025</h3>
+      <button class="modal-close" onclick="closeModal('modal-laporan-tahunan')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-chart-bar"></i> Ringkasan Capaian 2025</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Luas terkelola</label><span>1.195 Ha</span></div>
+          <div class="modal-field"><label>Volume panen</label><span>142 m³</span></div>
+          <div class="modal-field"><label>Pohon ditanam</label><span>620 bibit</span></div>
+          <div class="modal-field"><label>Kepatuhan PEFC</span><span>84%</span></div>
+          <div class="modal-field"><label>Tenaga kerja lokal</label><span>45 orang</span></div>
+          <div class="modal-field"><label>Nilai ekspor kayu</label><span>Rp 2,4 M</span></div>
+        </div>
+      </div>
+      <div class="modal-alert ok">Laporan telah disahkan oleh Direktur Operasional dan disampaikan ke Badan Sertifikasi PEFC pada 28 Februari 2026.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Generic modals for remaining cards -->
+<div class="modal-overlay" id="modal-pefc-2">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-shield-check"></i> Kriteria 2: Kepatuhan Hukum (95%)</h3><button class="modal-close" onclick="closeModal('modal-pefc-2')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-file-check"></i> Status Dokumen Legal</div>
+        <table class="modal-table">
+          <tr><th>Dokumen</th><th>Berlaku s/d</th><th>Status</th></tr>
+          <tr><td>IUPHHK-HA (Izin Usaha)</td><td>Des 2034</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>AMDAL / UKL-UPL</td><td>—</td><td><span class="status-badge status-ok">Tersedia</span></td></tr>
+          <tr><td>Izin lingkungan</td><td>Des 2026</td><td><span class="status-badge status-warn">Perlu Perpanjang</span></td></tr>
+          <tr><td>SVLK (Sertifikat Legalitas)</td><td>Mar 2027</td><td><span class="status-badge status-ok">Aktif</span></td></tr>
+          <tr><td>Izin CITES / Non-detriment</td><td>Jun 2027</td><td><span class="status-badge status-warn">Proses Pembaruan</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pefc-4">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-users"></i> Kriteria 4: Dampak Sosial (88%)</h3><button class="modal-close" onclick="closeModal('modal-pefc-4')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-building-community"></i> Program Sosial Aktif</div>
+        <div class="modal-grid">
+          <div class="modal-field"><label>Desa binaan</label><span>4 desa</span></div>
+          <div class="modal-field"><label>Tenaga lokal terserap</label><span>45 orang</span></div>
+          <div class="modal-field"><label>Program CSR</label><span>Rp 180 jt/tahun</span></div>
+          <div class="modal-field"><label>Status FPIC</label><span>2/4 desa selesai</span></div>
+        </div>
+      </div>
+      <div class="modal-alert warn">FPIC (Free, Prior, Informed Consent) untuk Desa Tumbang Miri dan Desa Karang Agung masih dalam proses negosiasi.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pefc-5">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-chart-line"></i> Kriteria 5: Pemantauan & Evaluasi (65%)</h3><button class="modal-close" onclick="closeModal('modal-pefc-5')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-device-analytics"></i> Sistem Monitoring</div>
+        <table class="modal-table">
+          <tr><th>Komponen</th><th>Progres</th><th>Target</th></tr>
+          <tr><td>Plot pemantauan permanen (PSP)</td><td>18 dari 30 plot</td><td>Sep 2026</td></tr>
+          <tr><td>Sistem data digital tegakan</td><td>60% terimput</td><td>Agt 2026</td></tr>
+          <tr><td>Kamera trap satwa liar</td><td>8 dari 15 unit</td><td>Jul 2026</td></tr>
+          <tr><td>Pemantauan sumber air</td><td>Lengkap</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pefc-6">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-arrows-exchange"></i> Kriteria 6: Rantai Pasok CoC (82%)</h3><button class="modal-close" onclick="closeModal('modal-pefc-6')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-link"></i> Status CoC Mitra</div>
+        <table class="modal-table">
+          <tr><th>Kategori</th><th>Jumlah Mitra</th><th>CoC Aktif</th></tr>
+          <tr><td>Pengolahan primer</td><td>4</td><td>4</td></tr>
+          <tr><td>Perdagangan</td><td>5</td><td>4</td></tr>
+          <tr><td>Manufaktur produk jadi</td><td>6</td><td>4</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>15</strong></td><td><strong>12</strong></td></tr>
+        </table>
+      </div>
+      <div class="modal-alert warn">3 mitra belum memiliki sertifikat CoC aktif. Pembelian dari mitra ini tidak dapat dilabeli PEFC hingga sertifikasi selesai.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-inv-kelas">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-chart-bar"></i> Distribusi Kelas Diameter</h3><button class="modal-close" onclick="closeModal('modal-inv-kelas')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <table class="modal-table">
+          <tr><th>Kelas</th><th>DBH (cm)</th><th>Pohon</th><th>Vol. (m³)</th><th>% Vol.</th></tr>
+          <tr><td>I – Semai</td><td>&lt;10</td><td>620</td><td>—</td><td>—</td></tr>
+          <tr><td>II – Sapihan</td><td>10–20</td><td>980</td><td>85</td><td>4,6%</td></tr>
+          <tr><td>III – Tiang</td><td>20–35</td><td>1.340</td><td>380</td><td>20,6%</td></tr>
+          <tr><td>IV – Pohon kecil</td><td>35–50</td><td>890</td><td>680</td><td>36,8%</td></tr>
+          <tr><td>V – Pohon besar</td><td>&gt;50</td><td>450</td><td>702</td><td>38,0%</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-inv-tinggi">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-ruler-2"></i> Data Tinggi Tegakan</h3><button class="modal-close" onclick="closeModal('modal-inv-tinggi')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Tinggi rata-rata</label><span>18,4 m</span></div>
+          <div class="modal-field"><label>Tinggi maksimum</label><span>32,6 m</span></div>
+          <div class="modal-field"><label>Tinggi minimum</label><span>4,2 m</span></div>
+          <div class="modal-field"><label>Metode ukur</label><span>Haga Hypsometer</span></div>
+        </div>
+      </div>
+      <div class="modal-alert">Pengukuran tinggi dilakukan pada 840 pohon contoh (20% populasi) tersebar proporsional di seluruh petak.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-inv-riap">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-trending-up"></i> Riap Tahunan (MAI)</h3><button class="modal-close" onclick="closeModal('modal-inv-riap')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>MAI rata-rata</label><span>2,8 m³/Ha/thn</span></div>
+          <div class="modal-field"><label>Petak A MAI</label><span>2,9 m³/Ha/thn</span></div>
+          <div class="modal-field"><label>Petak B MAI</label><span>2,7 m³/Ha/thn</span></div>
+          <div class="modal-field"><label>Petak C MAI</label><span>2,2 m³/Ha/thn</span></div>
+        </div>
+      </div>
+      <div class="modal-alert ok">Riap 2,8 m³/Ha/thn menunjukkan produktivitas yang baik untuk Dalbergia latifolia di kondisi Kalimantan. Referensi literatur: 1,8–3,5 m³/Ha/thn.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-inv-kerapatan">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-grid-dots"></i> Kerapatan Tegakan</h3><button class="modal-close" onclick="closeModal('modal-inv-kerapatan')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Kerapatan rata-rata</label><span>3,4 N/Ha</span></div>
+          <div class="modal-field"><label>Basal area</label><span>24,8 m²/Ha</span></div>
+          <div class="modal-field"><label>Indeks nilai penting</label><span>128,4</span></div>
+          <div class="modal-field"><label>Dominansi relatif</label><span>42,6%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-tegakan-detail">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-trees"></i> Detail Inventarisasi per Petak</h3><button class="modal-close" onclick="closeModal('modal-tegakan-detail')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-alert">Data inventarisasi lengkap Semester I 2026. Metode: Systematic sampling dengan plot 20×20 m, intensitas sampling 1%. Total plot terukur: 310 plot.</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title"><i class="ti ti-info-circle"></i> Catatan Petak C (Rehabilitasi)</div>
+        <div class="modal-alert warn">Petak C-01 merupakan areal rehabilitasi pasca kebakaran 2021. Pemanenan tidak diizinkan hingga tegakan mencapai diameter minimal 30 cm (estimasi 8–10 tahun).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-audit-jadwal">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-calendar-check"></i> Jadwal Audit PEFC</h3><button class="modal-close" onclick="closeModal('modal-audit-jadwal')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Tipe audit</label><span>Surveillance (Ke-2)</span></div>
+          <div class="modal-field"><label>Tanggal</label><span>15–17 Agt 2026</span></div>
+          <div class="modal-field"><label>Auditor</label><span>PT Sucofindo</span></div>
+          <div class="modal-field"><label>Lingkup</label><span>PEFC ST 1003:2018</span></div>
+        </div>
+      </div>
+      <div class="modal-alert warn">Pastikan semua temuan MNC-01, MNC-02, dan MNC-03 telah diselesaikan sebelum audit berlangsung.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-coc">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-link"></i> Sertifikat CoC PEFC</h3><button class="modal-close" onclick="closeModal('modal-coc')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Nomor sertifikat</label><span>PEFC/38-31-01</span></div>
+          <div class="modal-field"><label>Pemegang</label><span>PT Sonokeling Lestari</span></div>
+          <div class="modal-field"><label>Berlaku mulai</label><span>1 Jan 2024</span></div>
+          <div class="modal-field"><label>Berlaku hingga</label><span>31 Des 2027</span></div>
+          <div class="modal-field"><label>Lembaga sertifikasi</label><span>PT Sucofindo</span></div>
+          <div class="modal-field"><label>Lingkup produk</label><span>Kayu bulat, kayu gergajian</span></div>
+        </div>
+      </div>
+      <div class="modal-alert ok">Sertifikat CoC aktif dan dapat digunakan untuk klaim produk berlabel PEFC.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-checklist">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-list-check"></i> Matriks Kepatuhan PEFC ST 1003:2018</h3><button class="modal-close" onclick="closeModal('modal-checklist')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-alert">Berdasarkan PEFC ST 1003:2018 – Pengelolaan Hutan Berkelanjutan. Dari 9 klausul yang dipantau: 6 terpenuhi penuh, 2 dalam proses, 1 belum terpenuhi. Kepatuhan keseluruhan: 87%.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-laporan-audit">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-clipboard-check"></i> Laporan Audit Internal – Juni 2026</h3><button class="modal-close" onclick="closeModal('modal-laporan-audit')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Tanggal audit</label><span>3–4 Jun 2026</span></div>
+          <div class="modal-field"><label>Auditor lead</label><span>Ir. Bambang W.</span></div>
+          <div class="modal-field"><label>Temuan mayor</label><span>0</span></div>
+          <div class="modal-field"><label>Temuan minor</label><span>3</span></div>
+        </div>
+      </div>
+      <div class="modal-alert warn">Lihat detail 3 temuan minor di widget "Temuan Audit" pada dashboard.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-laporan-karbon">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-plant"></i> Laporan Stok Karbon 2026</h3><button class="modal-close" onclick="closeModal('modal-laporan-karbon')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-grid">
+          <div class="modal-field"><label>Total stok karbon</label><span>6.840 tC</span></div>
+          <div class="modal-field"><label>CO₂ equivalen</label><span>25.080 tCO₂e</span></div>
+          <div class="modal-field"><label>Serapan tahunan</label><span>342 tC/tahun</span></div>
+          <div class="modal-field"><label>Metode perhitungan</label><span>IPCC Tier 2</span></div>
+        </div>
+      </div>
+      <div class="modal-alert ok">Potensi perdagangan karbon: ± USD 504.000 (asumsi harga USD 20/tCO₂e). Pengembangan proyek REDD+ sedang dikaji.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-jadwal">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="ti ti-calendar-event"></i> Rencana Kegiatan Semester II 2026</h3><button class="modal-close" onclick="closeModal('modal-jadwal')">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-alert">Total anggaran Semester II 2026: Rp 324 juta. Kegiatan pemanenan Petak A memerlukan persetujuan Komite Pengelolaan sebelum 30 September 2026.</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => {
+        m.classList.remove('active');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Animate progress bars on load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = w; }, 50);
+      });
+    }, 200);
+  });
+</script>
+</body>
+</html>
